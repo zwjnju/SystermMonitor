@@ -31,6 +31,7 @@ public:
         this-> OSname = ProcessParser::getOSName();
         this-> kernelVer = ProcessParser::getSysKernelVersion();
     }
+    int getNumberOfCores();
     void setAttributes();
     void setLastCpuMeasures();
     std::string getMemPercent()const;
@@ -99,6 +100,22 @@ std::vector<std::string> SysInfo::getCoresStats()const{
         result.push_back(temp);
     }
     return result;
+}
+int SysInfo::getNumberOfCores() {
+    string line;
+    string name = "cpu cores";
+    std::ifstream stream;
+    stream = Util::getStream(Path::basePath() + "cpuinfo");
+
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);
+            return stoi(values[3]);
+        }
+    }
+    return 0; 
 }
 std::string SysInfo::getCpuPercent()const {
     return this->cpuPercent;

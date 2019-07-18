@@ -41,6 +41,8 @@ private:
     static string getOSName();
     static std::string PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2);
     static bool isPidExisting(string pid);
+    static float getSysActiveCpuTime(std::vector<string> values);
+    static float getSysIdleCpuTime(std::vector<string> values);
 };
 
 // TODO: Define all of the above functions below:
@@ -172,7 +174,7 @@ string ProcessParser::getProcUser(string pid) {
     return "";
 }
 
-vector<string> ProcessParser::getSysCpuPercent(string coreNumber = "") {
+vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
     string line;
     string name = "cpu" + coreNumber;
     ifstream stream = Util::getStream((Path::basePath() + Path::statPath()));
@@ -343,4 +345,20 @@ bool ProcessParser::isPidExisting(string pid) {
     }
     result = false;
     return result;
+}
+
+float ProcessParser::getSysActiveCpuTime(vector<string> values) {
+    return (stof(values[S_USER]) + 
+            stof(values[S_NICE]) + 
+            stof(values[S_SYSTEM]) + 
+            stof(values[S_IRQ]) + 
+            stof(values[S_SOFTIRQ]) + 
+            stof(values[S_STEAL]) + 
+            stof(values[S_GUEST]) +
+            stof(values[S_GUEST_NICE]));
+}
+
+float ProcessParser::getSysIdleCpuTime(vector<string> values) {
+    return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
+
 }

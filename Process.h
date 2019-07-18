@@ -63,11 +63,11 @@ string Process::getCmd()const {
 }
 
 int Process::getCpu()const {
-    return int(this->cpu);
+    return stoi(this->cpu);
 }
 
 int Process::getMem()const {
-    return int(this->mem);
+    return stoi(this->mem);
 }
 
 string Process::getUpTime()const {

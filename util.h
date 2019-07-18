@@ -56,7 +56,7 @@ void Util::getStream(std::string path, std::ifstream& stream){
     }
     //return stream;
 }*/
-std::ifstream getStream(std::string path) {
+std::ifstream Util::getStream(std::string path) {
     std::ifstream stream(path);
     if(!stream) {
         throw std::runtime_error("Non existing pid");
