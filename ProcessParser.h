@@ -43,6 +43,8 @@ private:
     static bool isPidExisting(string pid);
     static float getSysActiveCpuTime(std::vector<string> values);
     static float getSysIdleCpuTime(std::vector<string> values);
+    static int getNumberOfCores();
+    static vector<string> getValues(string line);
 };
 
 // TODO: Define all of the above functions below:
@@ -89,10 +91,11 @@ string ProcessParser::getVmSize(string pid) {
     }
     while(getline(stream, line)) {
         if(line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
+            /* istringstream buf(line);
             //The line below I do not understand: are there two iterators: beg , end? end is initialized?
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             result = stof(values[1]) / float(1024*1024);
             break;
         }
@@ -130,9 +133,10 @@ long int ProcessParser::getSysUpTime() {
     string line;
     ifstream stream = Util::getStream((Path::basePath() + Path::upTimePath()));
     getline(stream, line);
-    istringstream buf(line);
+    /*istringstream buf(line);
     istream_iterator<string> beg(buf), end;
-    vector<string> values(beg, end);
+    vector<string> values(beg, end);*/
+    vector<string> values = getValues(line);
 
     return stoi(values[0]);
 }
@@ -142,9 +146,10 @@ string ProcessParser::getProcUpTime(string pid) {
     float result;
     ifstream stream = Util::getStream((Path::basePath() + pid + "/" + Path::statPath()));
     getline(stream, line);
-    istringstream buf(line);
+    /*istringstream buf(line);
     istream_iterator<string> beg(buf), end;
-    vector<string> values(beg, end);
+    vector<string> values(beg, end);*/
+    vector<string> values = getValues(line);
 
     return to_string(float(stof(values[13]) / sysconf(_SC_CLK_TCK)));
 }
@@ -156,9 +161,10 @@ string ProcessParser::getProcUser(string pid) {
     ifstream stream = Util::getStream((Path::basePath() + pid + Path::statusPath()));
     while(getline(stream, line)) {
         if(line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             result = values[1];
             break;
         }
@@ -180,9 +186,10 @@ vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
     ifstream stream = Util::getStream((Path::basePath() + Path::statPath()));
     while(getline(stream, line)) {
         if(line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             return values;
         }
     }
@@ -207,23 +214,26 @@ float ProcessParser::getSysRamPercent() {
             break;
         }
         if(line.compare(0, name1.size(), name1) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             total_mem = stof(values[1]);
 
         }
         if(line.compare(0, name2.size(), name2) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             free_mem = stof(values[1]);
 
         }
         if(line.compare(0, name3.size(), name3) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             buffers = stof(values[1]);
 
         }
@@ -238,9 +248,10 @@ string ProcessParser::getSysKernelVersion() {
 
     while(getline(stream, line)) {
         if(line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             return values[2];
         }
     }
@@ -257,9 +268,10 @@ int ProcessParser::getTotalThreads() {
         ifstream stream = Util::getStream(Path::basePath() + pid + Path::statusPath());
         while(getline(stream, line)) {
             if(line.compare(0, name.size(), name) == 0) {
-                istringstream buf(line);
+                /*istringstream buf(line);
                 istream_iterator<string> beg(buf), end;
-                vector<string> values(beg, end);
+                vector<string> values(beg, end);*/
+                vector<string> values = getValues(line);
                 result += stoi(values[1]);
                 break;
             }
@@ -277,9 +289,10 @@ int ProcessParser::getTotalNumberOfProcesses() {
 
     while(getline(stream, line)) {
         if(line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             result += stoi(values[1]);
 
         }
@@ -295,9 +308,10 @@ int ProcessParser::getNumberOfRunningProcesses() {
 
     while(getline(stream, line)) {
         if(line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
+            /*istringstream buf(line);
             istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
+            vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
             result += stoi(values[1]);
             break;
 
@@ -332,19 +346,32 @@ string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vecto
 }
 
 bool ProcessParser::isPidExisting(string pid) {
-    bool result;
-    string line;
-    string name = "";
-    ifstream stream = Util::getStream(Path::basePath());
-
-    while(getline(stream, line)) {
-        if(line.find(pid) != std::string::npos) {
-            result = true;
-            return result;
+    bool found = false;
+    for(string p : ProcessParser::getPidList()) {
+        if(p.compare(pid) == 0) {
+            found = true;
+            break;
         }
     }
-    result = false;
-    return result;
+    return found;
+}
+
+int ProcessParser::getNumberOfCores() {
+    string line;
+    string name = "cpu cores";
+    std::ifstream stream;
+    stream = Util::getStream(Path::basePath() + "cpuinfo");
+
+    while(std::getline(stream, line)) {
+        if(line.compare(0, name.size(), name) == 0) {
+            /*std::istringstream buf(line);
+            std::istream_iterator<string> beg(buf), end;
+            std::vector<string> values(beg, end);*/
+            vector<string> values = getValues(line);
+            return stoi(values[3]);
+        }
+    }
+    return 0; 
 }
 
 float ProcessParser::getSysActiveCpuTime(vector<string> values) {
@@ -361,4 +388,11 @@ float ProcessParser::getSysActiveCpuTime(vector<string> values) {
 float ProcessParser::getSysIdleCpuTime(vector<string> values) {
     return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
 
+}
+
+vector<string> ProcessParser::getValues(string line) {
+    istringstream buf(line);
+    istream_iterator<string> beg(buf), end;
+    vector<string> values(beg, end);
+    return values;
 }

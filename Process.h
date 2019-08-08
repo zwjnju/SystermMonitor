@@ -51,7 +51,17 @@ string Process::getProcess(){
     this->cpu = ProcessParser::getCpuPercent(this->pid);
 
     //TODO: finish the string! this->user + "   "+ mem...cpu...upTime...;
-    return (this->pid + "   " + this->user + " " + this->mem + " " + this->cpu + " " + this->upTime + " " + this->cmd);
+    return (this->pid + "       "
+                      + this->user 
+                      + "       " 
+                      + this->mem.substr(0,5) 
+                      + "       " 
+                      + this->cpu.substr(0,5) 
+                      + "       " 
+                      + this->upTime.substr(0,5) 
+                      + "       " 
+                      + this->cmd.substr(0,30)
+                      + "...");
 }
 
 string Process::getUser()const {
